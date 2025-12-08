@@ -1,6 +1,6 @@
 # Mission-Critical Flutter: FlightApp Reference Implementation
 
-![Mission Critical Flutter Banner](assets\images\mcfBookCoverTallBycphil.png)
+![Mission Critical Flutter Banner](assets/images/mcfBookCoverTallBycphil.png)
 
 > **A High-Integrity Flutter application built with rigor, reliability, and strict engineering standards derived from the Joint Strike Fighter (JSF) C++ Coding Standards.**
 
