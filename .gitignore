@@ -1,0 +1,88 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ / Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code
+# We allow checking in settings.json/launch.json for team consistency,
+# but verify you aren't committing absolute paths in them.
+.vscode/
+
+# Flutter / Dart / Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# --- Android ---
+# CRITICAL: Never commit local configuration
+android/local.properties
+android/gradle/wrapper/gradle-wrapper.properties
+android/.gradle
+android/captures/
+android/gradlew
+android/gradlew.bat
+# Build artifacts
+/android/app/debug
+/android/app/profile
+/android/app/release
+/android/app/build
+/android/app/libs
+
+# --- iOS ---
+ios/*.mode1v3
+ios/*.mode2v3
+ios/*.moved-aside
+ios/*.pbuser
+ios/*.perspectivev3
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.flx
+ios/Flutter/app.zip
+ios/Flutter/flutter_assets/
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+ios/.generated/
+ios/Pods/
+ios/Podfile.lock
+
+# --- Desktop (macOS, Windows, Linux) ---
+macos/Flutter/ephemeral/
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+
+# --- Web ---
+web/icons/Icon-192.png
+web/icons/Icon-512.png
+web/favicon.png
+
+# --- Exceptions ---
+# (Files we specifically WANT to track)
+!default.realm
+!/lib/
+!/test/

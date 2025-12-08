@@ -1,0 +1,40 @@
+pluginManagement {
+    // Define the function to read local.properties
+    def flutterSdkPath = {
+        def properties = new Properties()
+        def propertiesFile = file("local.properties")
+        if (propertiesFile.exists()) {
+            propertiesFile.withInputStream { properties.load(it) }
+            def sdkPath = properties.getProperty("flutter.sdk")
+            if (sdkPath != null) return sdkPath
+        }
+        // Fallback: Environment variable (useful if local.properties fails)
+        return System.getenv("FLUTTER_ROOT")
+    }()
+
+    // DEBUG: This will print the path to your console when you run the build
+    println "My Flutter SDK Path: $flutterSdkPath"
+    println "Looking for Plugin at: $flutterSdkPath/packages/flutter_tools/gradle"
+
+    // If path is missing, throw clear error
+    assert flutterSdkPath != null, "Could not find flutter.sdk in local.properties or FLUTTER_ROOT env var."
+
+    // Include the Flutter Gradle build (provides the plugin)
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
+    // Upgrade Android Plugin to 8.2.0 (Compatible with Gradle 8.5)
+    id "com.android.application" version "8.2.0" apply false
+    // Upgrade Kotlin to 1.9.10 (Compatible with AGP 8.2.0)
+    id "org.jetbrains.kotlin.android" version "1.9.10" apply false
+}
+
+include ":app"

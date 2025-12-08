@@ -1,0 +1,64 @@
+
+# MCF Rule 3.2 (Shall): Use a strict baseline.
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  # MCF Rule 3.1 (Shall): Enforce strict type checking modes.
+  language:
+    strict-casts: true      # Prevents 'dynamic' from silently becoming a specific type.
+    strict-inference: true  # Forces type annotation when the analyzer cannot determine it.
+    strict-raw-types: true  # Disallows 'List' without a type parameter (e.g., must be List<int>).
+
+  # Treat specific violations as fatal build errors (Zero Tolerance).
+  errors:
+    # Safety Violations
+    avoid_dynamic_calls: error      # Calling methods on 'dynamic' is a runtime crash risk.
+    invalid_assignment: error
+    missing_return: error
+    dead_code: error
+    
+    # Maintainability Violations
+    always_declare_return_types: error
+    avoid_print: error              # Production code must use a Logger, not print().
+
+  # Files to exclude from rigorous analysis (e.g., generated code).
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "test/.test_coverage.dart"
+
+linter:
+  rules:
+    # --- Type Safety & Null Safety (MCF Chapter 3) ---
+    
+    # Prohibit the use of 'dynamic' unless absolutely necessary.
+    avoid_dynamic_calls: true
+    
+    # Ensure all generics are explicit.
+    always_specify_types: false     # Set to 'true' if the team prefers verbose types over inference.
+    
+    # --- Immutability & Constants (MCF Rule 3.6) ---
+    
+    # Enforce 'const' wherever possible to reduce runtime memory allocation.
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    
+    # Enforce immutability in Widget classes (MCF Rule 4.1.3).
+    use_key_in_widget_constructors: true
+    avoid_unnecessary_containers: true
+    
+    # --- Error Handling (MCF Rule 3.11) ---
+    
+    # Prevent empty catch blocks which swallow critical errors.
+    empty_catches: true
+    avoid_catches_without_on_clauses: true  # Encourage catching specific Exceptions.
+    
+    # --- Logic & Control Flow ---
+    
+    # Prevent 'if (true)' blocks without braces (MCF Rule 3.9).
+    always_put_control_body_on_new_line: true
+    curly_braces_in_flow_control_structures: true
+    
+    # Avoid "Magic Numbers" (MCF Rule 3.8) by flagging literals used in logic.
+    # Note: No direct linter for this, but 'prefer_const_declarations' helps.
