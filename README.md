@@ -72,7 +72,7 @@ Clone the repository:
 
 Bash
 
-git clone [https://github.com/your-username/flightapp.git](https://github.com/your-username/flightapp.git)
+git clone [https://github.com/LosPhilly/mission-critical-flutter](https://github.com/LosPhilly/mission-critical-flutter)
 cd flightapp
 Install dependencies:
 
