@@ -6,6 +6,7 @@
  * * Author: [Carlos Phillips]
  * License: MIT (see LICENSE file)
  */
+/// lib\data\models\user_model.dart
 import 'package:flightapp/domain/entities/address.dart'; // Ensure these entities exist
 import 'package:flightapp/domain/entities/company.dart'; // based on previous step
 import 'package:flightapp/domain/entities/user.dart';

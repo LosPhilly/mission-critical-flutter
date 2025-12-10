@@ -72,6 +72,7 @@ class _CrewDataDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Oversizing widgets does not cause Red Screen of Death
             const SizedBox(height: 32),
             // MCF Rule 4.7: Const used for static icon
             const Icon(Icons.person_pin, size: 80, color: Colors.blueGrey),

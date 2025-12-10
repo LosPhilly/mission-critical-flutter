@@ -1,3 +1,23 @@
+/*
+ * Mission-Critical Flutter
+ * Copyright (c) 2025 Carlos Phillips / Mission-Critical Flutter
+ * This file is part of the "Mission-Critical Flutter" reference implementation.
+ * It strictly adheres to the architectural rules defined in the book.
+ * Author: Carlos Phillips
+ * License: MIT (see LICENSE file)
+ */
+
+/*
+Important Note on Goldens
+When a user runs this test for the first time, 
+it will fail because the reference image (goldens/crew_display_commander.png) 
+doesn't exist yet. They will need to run:
+ flutter test --update-goldens
+
+
+*/
+
+// test\presentation\cubit\screens\profile_screen_golden_test.dart
 import 'package:bloc_test/bloc_test.dart'; // REQUIRED
 import 'package:flightapp/domain/entities/address.dart';
 import 'package:flightapp/domain/entities/company.dart';

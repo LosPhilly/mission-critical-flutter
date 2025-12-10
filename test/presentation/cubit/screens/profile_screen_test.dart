@@ -1,3 +1,12 @@
+/*
+ * Mission-Critical Flutter
+ * Copyright (c) 2025 Carlos Phillips / Mission-Critical Flutter
+ * This file is part of the "Mission-Critical Flutter" reference implementation.
+ * It strictly adheres to the architectural rules defined in the book.
+ * Author: Carlos Phillips
+ * License: MIT (see LICENSE file)
+ */
+// test\presentation\cubit\screens\profile_screen_test.dart
 import 'package:bloc_test/bloc_test.dart'; // Provides MockCubit
 // Imports from your project
 import 'package:flightapp/presentation/cubit/user_cubit.dart';
