@@ -8,31 +8,56 @@
 
 ## 📖 Overview
 
-This repository acts as the reference implementation for the **Mission-Critical Flutter (MCF)** methodology. It demonstrates how to build safety-critical mobile applications where failure is not an option.
+This repository serves as the official reference implementation for the **Mission-Critical Flutter (MCF)** methodology.  
+It demonstrates how to build **safety‑critical mobile applications** where failure is not an option.
 
-Unlike standard Flutter prototypes, this project prioritizes **determinism**, **type safety**, and **architectural isolation** over development speed. It enforces a strict subset of the Dart language to eliminate entire classes of runtime errors (e.g., `TypeError`, `NullPointer`, `RaceCondition`).
+Standard Flutter encourages rapid prototyping — but speed introduces risk.  
+Mission‑critical systems demand something else:
+
+- **Deterministic behavior**  
+- **Architectural isolation**  
+- **Total type safety**  
+- **Predictable state flow**
+
+MCF enforces a strict Dart subset to eliminate entire classes of runtime errors such as:
+
+- `TypeError`
+- `NullPointer`
+- Race conditions  
+- Illegal layer access  
+- Uncaught UI states
 
 ### **Core Philosophy**
-1. **Architecture:** Strict separation of concerns (Presentation, Domain, Data).
-2. **Safety:** Zero tolerance for `dynamic` types or implicit casting.
-3. **State:** Unidirectional, immutable, and exhaustive state machines.
-4. **Verification:** 100% logic coverage and pixel-perfect Golden tests.
+1. **Architecture:** Strict separation of Presentation, Domain, and Data Layers.  
+2. **Safety:** Zero tolerance for `dynamic`, implicit casts, or unsafely nullable logic.  
+3. **State:** Immutable, exhaustive, unidirectional state machines.  
+4. **Verification:** 100% business logic test coverage + Golden tests for UI stability.
 
 ---
 
 ## 🏗 Architecture
 
-The project follows a rigorous **Clean Architecture** pattern with a strict **Composition Root**.
+This project follows a **Clean Architecture** pattern with a strict **Composition Root**, ensuring that dependencies only flow downward.
 
-### The Composition Root
-`main.dart` is the only file aware of all layers. It assembles the dependency graph before the app launches.
+---
+
+### **The Composition Root**
+
+`main.dart` is the single entry point that assembles the complete dependency graph.
 
 <p align="center">
   <img src="assets/images/compositionLayerWMain.png" width="600" alt="Composition Root Diagram">
 </p>
 
-### Dependency Flow (Rule 2.2)
-Dependencies flow strictly **downwards**. The Domain layer is pure logic and knows nothing about the outer layers (UI or Data).
+---
+
+### **Dependency Flow (Rule 2.2)**
+
+The Domain layer is completely pure:  
+❌ No Flutter  
+❌ No JSON  
+❌ No HTTP  
+❌ No UI imports  
 
 <p align="center">
   <img src="assets/images/layered_dependencyFlow.png" width="600" alt="Dependency Flow Diagram">
@@ -40,47 +65,80 @@ Dependencies flow strictly **downwards**. The Domain layer is pure logic and kno
 
 ```text
 lib/
-├── domain/            # PURE LOGIC (No Flutter, No JSON, No DB)
-│   ├── entities/      # Core business objects (User, Address)
-│   ├── failures/      # Domain-specific failure definitions
-│   └── repositories/  # Abstract Interfaces (Contracts)
+├── domain/            # PURE LOGIC (Rules, Entities, Failures, Interfaces)
+│   ├── entities/
+│   ├── failures/
+│   └── repositories/  # Abstract Contracts Only
 │
-├── data/              # INFRASTRUCTURE (Dirty Layer)
-│   ├── models/        # DTOs that parse JSON -> Entities
-│   └── repositories/  # Concrete implementations (Http, Hive)
+├── data/              # INFRASTRUCTURE (Serialization, Networking)
+│   ├── models/        # DTOs -> Entities
+│   └── repositories/  # Concrete Implementations
 │
-├── presentation/      # UI & STATE (Flutter)
-│   ├── cubit/         # State Containers (Blinds Logic from UI)
-│   └── screens/       # Stateless Widgets & Decomposed UI
+├── presentation/      # UI + State (Flutter Only)
+│   ├── cubit/         # Logic Containers (Enforce Rule 5.1)
+│   └── screens/       # Stateless Widgets
 │
-└── main.dart          # COMPOSITION ROOT (Dependency Injection)
+└── main.dart          # COMPOSITION ROOT
 ```
 
 ---
 
 ## 🔄 State Management (MCF Rule 5.1)
 
-We utilize a strict **Unidirectional Data Flow**.  
-The UI never manually mutates state — it dispatches events, which the Domain layer processes through Cubits.
+State must always flow **downward**.  
+UI elements never mutate state directly.
 
 <p align="center">
-  <img src="assets/images/5.1stateManagement.png" width="700" alt="Unidirectional Data Flow Diagram">
+  <img src="assets/images/5.1stateManagement.png" width="700" alt="Unidirectional Data Flow">
 </p>
+
+- UI dispatches an event/intent  
+- Cubit processes the event using Domain logic  
+- Cubit emits a new **immutable state**  
+- UI rebuilds based on that state  
+
+No shortcuts. No mutable leaks. Zero ambiguity.
+
+---
+
+## 🛠️ The MCF CLI (Strongly Recommended)
+
+To avoid human error and enforce strict compliance, use the official MCF CLI:
+
+**Pub.dev:** https://pub.dev/packages/mcf_cli  
+**Repository:** https://github.com/LosPhilly/mcf_cli  
+
+### Installation
+```bash
+dart pub global activate mcf_cli
+```
+
+### Generate a fully compliant feature:
+```bash
+mcf create feature user_profile
+```
+
+This creates:
+
+- Domain entity + repository contract  
+- Data DTO + repository implementation  
+- Presentation Cubit + State + UI scaffold  
+- Strict imports + analysis rules  
 
 ---
 
 ## 🛡️ MCF Compliance Checklist
 
-This project adheres fully to the Mission-Critical Flutter standards:
-
-- [x] **MCF 2.2:** Strict Layer Isolation (Dependency Inversion enforced)  
-- [x] **MCF 3.1:** Strict analysis options (`strict-casts`, `strict-inference`)  
-- [x] **MCF 3.4:** Zero usage of the bang operator `!`  
-- [x] **MCF 4.1:** UI components default to `StatelessWidget`  
-- [x] **MCF 5.1:** Strict unidirectional data flow via Cubits  
-- [x] **MCF 6.5:** Heavy JSON parsing offloaded to isolates (`compute()`)  
-- [x] **MCF 6.6:** Reentrancy guards on async actions  
-- [x] **MCF 7.5:** Pixel-perfect visual verification via Golden Tests  
+| Rule | Description | Status |
+|------|-------------|--------|
+| **MCF 2.2** | Strict Layer Isolation | ✔️ Enforced |
+| **MCF 3.1** | Strict Analysis (no implicit casts/inference) | ✔️ Enforced |
+| **MCF 3.4** | No bang operator `!` allowed | ✔️ Zero tolerated |
+| **MCF 4.1** | Stateless Widgets by default | ✔️ Required |
+| **MCF 5.1** | Unidirectional State Flow | ✔️ Mandatory |
+| **MCF 6.5** | Heavy JSON parsing offloaded to isolates | ✔️ compute() used |
+| **MCF 6.6** | Async reentrancy guards | ✔️ Implemented |
+| **MCF 7.5** | Golden tests for critical UI | ✔️ Included |
 
 ---
 
@@ -88,22 +146,24 @@ This project adheres fully to the Mission-Critical Flutter standards:
 
 ### **Prerequisites**
 - Flutter SDK **3.10.0+**
-- Dart SDK **3.0.0+** (required for sealed classes)
+- Dart SDK **3.0.0+** (sealed classes support)
 
 ### **Installation**
+Clone the repository:
 
-1. Clone the repository:
 ```bash
 git clone https://github.com/LosPhilly/mission-critical-flutter
 cd flightapp
 ```
 
-2. Install dependencies:
+Install dependencies:
+
 ```bash
 flutter pub get
 ```
 
-3. Run the application:
+Run:
+
 ```bash
 flutter run
 ```
@@ -112,31 +172,39 @@ flutter run
 
 ## 🧪 Verification & Testing
 
-This project uses the **MCF Testing Pyramid**:
+This project uses the **Mission-Critical Test Pyramid**:
 
-### **1. Unit Tests — Business Logic**
-Ensures 100% branch coverage for Cubits & Repositories.
+---
+
+### **1. Unit Tests (Business Logic)**  
+100% branch coverage for Cubits + Domain logic.
 
 ```bash
 flutter test test/presentation/cubit/user_cubit_test.dart
 ```
 
-### **2. Widget Tests — Behavioral Contracts**
-Ensures UI wiring is correct.
+---
+
+### **2. Widget Tests (UI Behavior)**  
+Ensures correct wiring between state and UI.
 
 ```bash
 flutter test test/presentation/screens/profile_screen_test.dart
 ```
 
-### **3. Golden Tests — Visual Regression**
-Ensures pixel-perfect rendering for critical displays.
+---
+
+### **3. Golden Tests (Visual Regression)**  
+Ensures pixel-perfect UI rendering over time.
 
 Run:
+
 ```bash
 flutter test test/presentation/screens/profile_screen_golden_test.dart
 ```
 
-Regenerate Goldens:
+Regenerate after intentional UI changes:
+
 ```bash
 flutter test --update-goldens
 ```
@@ -145,21 +213,22 @@ flutter test --update-goldens
 
 ## 🔧 Technical Stack
 
-| Layer | Technology |
-|-------|------------|
+| Component | Technology |
+|-----------|------------|
 | Framework | Flutter |
 | Language | Dart (Strict Mode) |
-| State mgmt | flutter_bloc |
-| Immutability | equatable |
+| State Management | flutter_bloc |
+| Equality | equatable |
 | Networking | http |
-| Testing | mocktail, bloc_test |
-| Linting | very_good_analysis (custom enforced) |
+| Testing | mocktail • bloc_test |
+| Linting | very_good_analysis (MCF‑customized) |
 
 ---
 
 ## 📄 License
 
-Licensed under the **MIT License**. See LICENSE for more information.
+Licensed under the **MIT License**.  
+See the LICENSE file for full details.
 
 > **"The difference between a prototype and a product is not features; it is predictability."**
 
@@ -167,7 +236,7 @@ Licensed under the **MIT License**. See LICENSE for more information.
 
 ## ✍️ Citation
 
-If you use this architecture or reference it in research, please cite:
+If you reference this architecture or implementation:
 
 **Phillips, Carlos. (2025). _Mission-Critical Flutter: Building High-Integrity Applications._**
 
