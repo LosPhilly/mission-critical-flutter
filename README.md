@@ -13,16 +13,30 @@ This repository acts as the reference implementation for the **Mission-Critical 
 Unlike standard Flutter prototypes, this project prioritizes **determinism**, **type safety**, and **architectural isolation** over development speed. It enforces a strict subset of the Dart language to eliminate entire classes of runtime errors (e.g., `TypeError`, `NullPointer`, `RaceCondition`).
 
 ### **Core Philosophy**
-1.  **Architecture:** Strict separation of concerns (Presentation, Domain, Data).
-2.  **Safety:** Zero tolerance for `dynamic` types or implicit casting.
-3.  **State:** Unidirectional, immutable, and exhaustive state machines.
-4.  **Verification:** 100% logic coverage and pixel-perfect Golden tests.
+1. **Architecture:** Strict separation of concerns (Presentation, Domain, Data).
+2. **Safety:** Zero tolerance for `dynamic` types or implicit casting.
+3. **State:** Unidirectional, immutable, and exhaustive state machines.
+4. **Verification:** 100% logic coverage and pixel-perfect Golden tests.
 
 ---
 
 ## 🏗 Architecture
 
 The project follows a rigorous **Clean Architecture** pattern with a strict **Composition Root**.
+
+### The Composition Root
+`main.dart` is the only file aware of all layers. It assembles the dependency graph before the app launches.
+
+<p align="center">
+  <img src="assets/images/compositionLayerWMain.png" width="600" alt="Composition Root Diagram">
+</p>
+
+### Dependency Flow (Rule 2.2)
+Dependencies flow strictly **downwards**. The Domain layer is pure logic and knows nothing about the outer layers (UI or Data).
+
+<p align="center">
+  <img src="assets/images/layered_dependencyFlow.png" width="600" alt="Dependency Flow Diagram">
+</p>
 
 ```text
 lib/
@@ -40,100 +54,120 @@ lib/
 │   └── screens/       # Stateless Widgets & Decomposed UI
 │
 └── main.dart          # COMPOSITION ROOT (Dependency Injection)
-Key Constraint: The Presentation Layer never imports the Data Layer. All communication occurs via Domain Interfaces.
+```
 
-🛡️ MCF Compliance Checklist
-This project adheres to the Mission-Critical Flutter Audit Checklist:
+---
 
-[x] MCF 2.2: Strict Layer Isolation (Dependency Inversion Enforced).
+## 🔄 State Management (MCF Rule 5.1)
 
-[x] MCF 3.1: Strict Analysis Options (strict-casts, strict-inference).
+We utilize a strict **Unidirectional Data Flow**.  
+The UI never manually mutates state — it dispatches events, which the Domain layer processes through Cubits.
 
-[x] MCF 3.4: No usage of the bang operator (!).
+<p align="center">
+  <img src="assets/images/5.1stateManagement.png" width="700" alt="Unidirectional Data Flow Diagram">
+</p>
 
-[x] MCF 4.1: UI components are StatelessWidget by default.
+---
 
-[x] MCF 5.1: Unidirectional Data Flow via Cubits.
+## 🛡️ MCF Compliance Checklist
 
-[x] MCF 6.5: Heavy JSON parsing offloaded to Isolates via compute().
+This project adheres fully to the Mission-Critical Flutter standards:
 
-[x] MCF 6.6: Reentrancy guards preventing race conditions on async actions.
+- [x] **MCF 2.2:** Strict Layer Isolation (Dependency Inversion enforced)  
+- [x] **MCF 3.1:** Strict analysis options (`strict-casts`, `strict-inference`)  
+- [x] **MCF 3.4:** Zero usage of the bang operator `!`  
+- [x] **MCF 4.1:** UI components default to `StatelessWidget`  
+- [x] **MCF 5.1:** Strict unidirectional data flow via Cubits  
+- [x] **MCF 6.5:** Heavy JSON parsing offloaded to isolates (`compute()`)  
+- [x] **MCF 6.6:** Reentrancy guards on async actions  
+- [x] **MCF 7.5:** Pixel-perfect visual verification via Golden Tests  
 
-[x] MCF 7.5: Critical UI components verified via Golden Tests.
+---
 
-🚀 Getting Started
-Prerequisites
-Flutter SDK 3.10.0 or higher.
+## 🚀 Getting Started
 
-Dart SDK 3.0.0 or higher (Required for sealed classes).
+### **Prerequisites**
+- Flutter SDK **3.10.0+**
+- Dart SDK **3.0.0+** (required for sealed classes)
 
-Installation
-Clone the repository:
+### **Installation**
 
-Bash
-
-git clone [https://github.com/LosPhilly/mission-critical-flutter](https://github.com/LosPhilly/mission-critical-flutter)
+1. Clone the repository:
+```bash
+git clone https://github.com/LosPhilly/mission-critical-flutter
 cd flightapp
-Install dependencies:
+```
 
-Bash
-
+2. Install dependencies:
+```bash
 flutter pub get
-Run the application:
+```
 
-Bash
-
+3. Run the application:
+```bash
 flutter run
-🧪 Verification & Testing
-This project uses a "Testing Pyramid" strategy.
+```
 
-1. Unit Tests (Logic)
-Verifies 100% of business logic branches (Cubits & Repositories).
+---
 
-Bash
+## 🧪 Verification & Testing
 
+This project uses the **MCF Testing Pyramid**:
+
+### **1. Unit Tests — Business Logic**
+Ensures 100% branch coverage for Cubits & Repositories.
+
+```bash
 flutter test test/presentation/cubit/user_cubit_test.dart
-2. Widget Tests (Behavior)
-Verifies the wiring between the UI and the State Management.
+```
 
-Bash
+### **2. Widget Tests — Behavioral Contracts**
+Ensures UI wiring is correct.
 
+```bash
 flutter test test/presentation/screens/profile_screen_test.dart
-3. Golden Tests (Visual Regression)
-Verifies pixel-perfect rendering of critical displays.
+```
 
-Run Verification:
+### **3. Golden Tests — Visual Regression**
+Ensures pixel-perfect rendering for critical displays.
 
-Bash
-
+Run:
+```bash
 flutter test test/presentation/screens/profile_screen_golden_test.dart
-Generate/Update Goldens: If you modify the UI intentionally, regenerate the reference images:
+```
 
-Bash
-
+Regenerate Goldens:
+```bash
 flutter test --update-goldens
-🔧 Technical Stack
-Framework: Flutter
+```
 
-Language: Dart (Strict Mode)
+---
 
-State Management: flutter_bloc
+## 🔧 Technical Stack
 
-Equality: equatable
+| Layer | Technology |
+|-------|------------|
+| Framework | Flutter |
+| Language | Dart (Strict Mode) |
+| State mgmt | flutter_bloc |
+| Immutability | equatable |
+| Networking | http |
+| Testing | mocktail, bloc_test |
+| Linting | very_good_analysis (custom enforced) |
 
-Networking: http
+---
 
-Testing: mocktail, bloc_test
+## 📄 License
 
-Linting: very_good_analysis (Customized)
+Licensed under the **MIT License**. See LICENSE for more information.
 
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+> **"The difference between a prototype and a product is not features; it is predictability."**
 
-"The difference between a prototype and a product is not features; it is predictability."
+---
 
 ## ✍️ Citation
 
-If you use this architecture in your projects or research, please credit the original work:
+If you use this architecture or reference it in research, please cite:
 
-> [Phillips], [Carlos]. (2025). *Mission-Critical Flutter: Building High-Integrity Applications*.
+**Phillips, Carlos. (2025). _Mission-Critical Flutter: Building High-Integrity Applications._**
+
