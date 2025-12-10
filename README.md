@@ -1,6 +1,6 @@
 # Mission-Critical Flutter: FlightApp Reference Implementation
 
-![Mission Critical Flutter Banner](assets\images\mcfBookCoverTallBycphil.png)
+![Mission Critical Flutter Banner](assets/images/mcfBookCoverTallBycphil.png)
 
 > **A High-Integrity Flutter application built with rigor, reliability, and strict engineering standards derived from the Joint Strike Fighter (JSF) C++ Coding Standards.**
 
@@ -72,7 +72,7 @@ Clone the repository:
 
 Bash
 
-git clone [https://github.com/your-username/flightapp.git](https://github.com/your-username/flightapp.git)
+git clone [https://github.com/LosPhilly/mission-critical-flutter](https://github.com/LosPhilly/mission-critical-flutter)
 cd flightapp
 Install dependencies:
 
